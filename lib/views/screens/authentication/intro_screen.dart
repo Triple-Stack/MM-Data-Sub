@@ -47,8 +47,9 @@ class IntroductionScreen extends StatelessWidget {
                                 Text(
                                   Helper.introductionMessges[index].title!,
                                   textAlign: TextAlign.center,
-                                  style:
-                                      Theme.of(context).textTheme.headlineLarge,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineMedium!,
                                 ),
                                 const SizedBox(height: 20),
                                 Text(

@@ -50,10 +50,7 @@ Future<void> main() async {
   Get.put(ThemeController());
 
   runApp(
-    DevicePreview(
-      enabled: !kReleaseMode,
-      builder: (context) => const MmDataApp(),
-    ),
+    const MmDataApp(),
   );
 
   NetWorkDependencyInjection.init();
