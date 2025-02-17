@@ -19,8 +19,6 @@ class AppConstants {
   AppConstants._internal();
   static const String url = "https://$domain";
   static const String domain = "mmdatasub.com.ng";
-  // https://islam24data.com/api
-  // https://islam24data.com/api
   static const String baseUrl = "$url/api";
   static const String mainUrl = "$baseUrl/app";
   static const String appName = "MM Data Sub";

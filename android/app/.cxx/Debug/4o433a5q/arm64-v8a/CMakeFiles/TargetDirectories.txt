@@ -1,0 +1,2 @@
+/Users/adzumr/Documents/GitHub/MM-Data-Sub/android/app/.cxx/Debug/4o433a5q/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/adzumr/Documents/GitHub/MM-Data-Sub/android/app/.cxx/Debug/4o433a5q/arm64-v8a/CMakeFiles/rebuild_cache.dir
