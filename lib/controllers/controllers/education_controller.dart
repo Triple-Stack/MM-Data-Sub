@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import '/model/home/exam/exam_success_model.dart';
 import '/model/home/exam/exams_model.dart';
 import 'package:flutter/material.dart';
@@ -30,8 +31,7 @@ class EducationController extends GetxController {
             headers: header,
           )
           .timeout(
-            const Duration(seconds: 30),
-            onTimeout: () => throw Exception(),
+            const Duration(seconds: 60),
           );
       debugPrint("Body: ${response.body}");
       if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -41,14 +41,16 @@ class EducationController extends GetxController {
         final message = jsonDecode(response.body)["msg"];
         AppConstants.throwError(message);
       }
-    } on TimeoutException catch (_) {
-      // Handle timeout explicitly
-      EasyLoading.showError(
-        "Request timed out. Please check your internet connection and try again.",
-        duration: const Duration(seconds: 1),
-      );
+    } on SocketException {
+      EasyLoading.showError("No internet connection.");
+    } on HttpException {
+      EasyLoading.showError("Failed to fetch data, try again");
+    } on FormatException {
+      EasyLoading.showError("Response format error.");
+    } on TimeoutException {
+      EasyLoading.showError("Request timed out. Try again.");
     } catch (e) {
-      debugPrint("Error: $e");
+      EasyLoading.showError("Something went wrong");
     }
   }
 
@@ -79,8 +81,7 @@ class EducationController extends GetxController {
             body: jsonEncode(body),
           )
           .timeout(
-            const Duration(seconds: 30),
-            onTimeout: () => throw Exception(),
+            const Duration(seconds: 60),
           );
       debugPrint("Data Success: ${response.body}");
       final auth = Get.put(AuthController());
@@ -107,14 +108,16 @@ class EducationController extends GetxController {
           duration: const Duration(seconds: 3),
         );
       }
-    } on TimeoutException catch (_) {
-      // Handle timeout explicitly
-      EasyLoading.showError(
-        "Request timed out. Please check your internet connection and try again.",
-        duration: const Duration(seconds: 1),
-      );
+    } on SocketException {
+      EasyLoading.showError("No internet connection.");
+    } on HttpException {
+      EasyLoading.showError("Failed to fetch data, try again");
+    } on FormatException {
+      EasyLoading.showError("Response format error.");
+    } on TimeoutException {
+      EasyLoading.showError("Request timed out. Try again.");
     } catch (e) {
-      debugPrint("Error: $e");
+      EasyLoading.showError("Something went wrong");
     } finally {
       EasyLoading.dismiss();
     }

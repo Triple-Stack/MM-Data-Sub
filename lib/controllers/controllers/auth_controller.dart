@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import '/model/authentication/contacts_model.dart';
 import '/model/home/accounts_model.dart';
@@ -77,8 +78,7 @@ class AuthController extends GetxController {
             body: jsonEncode(body),
           )
           .timeout(
-            const Duration(seconds: 30),
-            onTimeout: () => throw Exception(),
+            const Duration(seconds: 60),
           );
       debugPrint("Body: ${response.body}");
       if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -99,12 +99,14 @@ class AuthController extends GetxController {
           dismissOnTap: true,
         );
       }
-    } on TimeoutException catch (_) {
-      // Handle timeout explicitly
-      EasyLoading.showError(
-        "Request timed out. Please check your internet connection and try again.",
-        duration: const Duration(seconds: 1),
-      );
+    } on SocketException {
+      EasyLoading.showError("No internet connection.");
+    } on HttpException {
+      EasyLoading.showError("Failed to fetch data, try again");
+    } on FormatException {
+      EasyLoading.showError("Response format error.");
+    } on TimeoutException {
+      EasyLoading.showError("Request timed out. Try again.");
     } catch (e) {
       debugPrint("Error: $e");
     } finally {
@@ -145,12 +147,14 @@ class AuthController extends GetxController {
       } else {
         EasyLoading.showError("Fingerprint authentication not available");
       }
-    } on TimeoutException catch (_) {
-      // Handle timeout explicitly
-      EasyLoading.showError(
-        "Request timed out. Please check your internet connection and try again.",
-        duration: const Duration(seconds: 1),
-      );
+    } on SocketException {
+      EasyLoading.showError("No internet connection.");
+    } on HttpException {
+      EasyLoading.showError("Failed to fetch data, try again");
+    } on FormatException {
+      EasyLoading.showError("Response format error.");
+    } on TimeoutException {
+      EasyLoading.showError("Request timed out. Try again.");
     } catch (e) {
       debugPrint("Error: $e");
       EasyLoading.showError("$e");
@@ -186,16 +190,13 @@ class AuthController extends GetxController {
 
       final response = await http
           .post(
-        Uri.parse(endPoint),
-        headers: header,
-        body: jsonEncode(body),
-      )
+            Uri.parse(endPoint),
+            headers: header,
+            body: jsonEncode(body),
+          )
           .timeout(
-        const Duration(seconds: 30),
-        onTimeout: () {
-          throw Exception();
-        },
-      );
+            const Duration(seconds: 60),
+          );
       if (response.statusCode >= 200 && response.statusCode < 300) {
         debugPrint("Signup: ${response.body}");
         final token = jsonDecode(response.body)['data']['token'];
@@ -216,15 +217,16 @@ class AuthController extends GetxController {
           dismissOnTap: true,
         );
       }
-    } on TimeoutException catch (_) {
-      // Handle timeout explicitly
-      EasyLoading.showError(
-        "Request timed out. Please check your internet connection and try again.",
-        duration: const Duration(seconds: 1),
-      );
+    } on SocketException {
+      EasyLoading.showError("No internet connection.");
+    } on HttpException {
+      EasyLoading.showError("Failed to fetch data, try again");
+    } on FormatException {
+      EasyLoading.showError("Response format error.");
+    } on TimeoutException {
+      EasyLoading.showError("Request timed out. Try again.");
     } catch (e) {
-      debugPrint("Error: $e");
-      EasyLoading.showError("$e");
+      EasyLoading.showError("Something went wrong");
     } finally {
       EasyLoading.dismiss();
     }
@@ -247,8 +249,7 @@ class AuthController extends GetxController {
             headers: header,
           )
           .timeout(
-            const Duration(seconds: 30),
-            onTimeout: () => throw Exception(),
+            const Duration(seconds: 60),
           );
       debugPrint("User: ${response.body}");
       if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -262,15 +263,16 @@ class AuthController extends GetxController {
         final errorMessage = jsonDecode(response.body)["message"];
         debugPrint(errorMessage);
       }
-    } on TimeoutException catch (_) {
-      // Handle timeout explicitly
-      EasyLoading.showError(
-        "Request timed out. Please check your internet connection and try again.",
-        duration: const Duration(seconds: 1),
-      );
+    } on SocketException {
+      EasyLoading.showError("No internet connection.");
+    } on HttpException {
+      EasyLoading.showError("Failed to fetch data, try again");
+    } on FormatException {
+      EasyLoading.showError("Response format error.");
+    } on TimeoutException {
+      EasyLoading.showError("Request timed out. Try again.");
     } catch (e) {
-      debugPrint("Error: $e");
-      EasyLoading.showError("$e");
+      EasyLoading.showError("Something went wrong");
     }
   }
 
@@ -291,8 +293,7 @@ class AuthController extends GetxController {
             headers: header,
           )
           .timeout(
-            const Duration(seconds: 30),
-            onTimeout: () => throw Exception(),
+            const Duration(seconds: 60),
           );
       debugPrint("Contacts: ${response.body}");
       if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -302,14 +303,16 @@ class AuthController extends GetxController {
         final message = jsonDecode(response.body)["message"];
         debugPrint("Contacts: $message");
       }
-    } on TimeoutException catch (_) {
-      // Handle timeout explicitly
-      EasyLoading.showError(
-        "Request timed out. Please check your internet connection and try again.",
-        duration: const Duration(seconds: 1),
-      );
+    } on SocketException {
+      EasyLoading.showError("No internet connection.");
+    } on HttpException {
+      EasyLoading.showError("Failed to fetch data, try again");
+    } on FormatException {
+      EasyLoading.showError("Response format error.");
+    } on TimeoutException {
+      EasyLoading.showError("Request timed out. Try again.");
     } catch (e) {
-      debugPrint("Error: $e");
+      EasyLoading.showError("Something went wrong");
     }
   }
 
@@ -336,8 +339,7 @@ class AuthController extends GetxController {
             body: jsonEncode(body),
           )
           .timeout(
-            const Duration(seconds: 30),
-            onTimeout: () => throw Exception(),
+            const Duration(seconds: 60),
           );
       debugPrint("Banks: ${response.body}");
       if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -347,14 +349,16 @@ class AuthController extends GetxController {
         final errorMessage = jsonDecode(response.body)["message"];
         throw errorMessage;
       }
-    } on TimeoutException catch (_) {
-      // Handle timeout explicitly
-      EasyLoading.showError(
-        "Request timed out. Please check your internet connection and try again.",
-        duration: const Duration(seconds: 1),
-      );
+    } on SocketException {
+      EasyLoading.showError("No internet connection.");
+    } on HttpException {
+      EasyLoading.showError("Failed to fetch data, try again");
+    } on FormatException {
+      EasyLoading.showError("Response format error.");
+    } on TimeoutException {
+      EasyLoading.showError("Request timed out. Try again.");
     } catch (e) {
-      debugPrint("Error: $e");
+      EasyLoading.showError("Something went wrong");
     }
     return accountsModel!;
   }
@@ -376,8 +380,7 @@ class AuthController extends GetxController {
             headers: header,
           )
           .timeout(
-            const Duration(seconds: 30),
-            onTimeout: () => throw Exception(),
+            const Duration(seconds: 60),
           );
       debugPrint("Transactions: ${response.body}");
       if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -389,14 +392,16 @@ class AuthController extends GetxController {
         final errorMessage = jsonDecode(response.body)["message"];
         throw errorMessage;
       }
-    } on TimeoutException catch (_) {
-      // Handle timeout explicitly
-      EasyLoading.showError(
-        "Request timed out. Please check your internet connection and try again.",
-        duration: const Duration(seconds: 1),
-      );
+    } on SocketException {
+      EasyLoading.showError("No internet connection.");
+    } on HttpException {
+      EasyLoading.showError("Failed to fetch data, try again");
+    } on FormatException {
+      EasyLoading.showError("Response format error.");
+    } on TimeoutException {
+      EasyLoading.showError("Request timed out. Try again.");
     } catch (e) {
-      debugPrint("Error: $e");
+      EasyLoading.showError("Something went wrong");
     }
   }
 
@@ -417,8 +422,7 @@ class AuthController extends GetxController {
             headers: header,
           )
           .timeout(
-            const Duration(seconds: 30),
-            onTimeout: () => throw Exception(),
+            const Duration(seconds: 60),
           );
       debugPrint("User: ${response.body}");
       if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -430,14 +434,16 @@ class AuthController extends GetxController {
         final message = jsonDecode(response.body)["msg"];
         throw message;
       }
-    } on TimeoutException catch (_) {
-      // Handle timeout explicitly
-      EasyLoading.showError(
-        "Request timed out. Please check your internet connection and try again.",
-        duration: const Duration(seconds: 1),
-      );
+    } on SocketException {
+      EasyLoading.showError("No internet connection.");
+    } on HttpException {
+      EasyLoading.showError("Failed to fetch data, try again");
+    } on FormatException {
+      EasyLoading.showError("Response format error.");
+    } on TimeoutException {
+      EasyLoading.showError("Request timed out. Try again.");
     } catch (e) {
-      debugPrint("Error: $e");
+      EasyLoading.showError("Something went wrong");
     }
   }
 
@@ -463,8 +469,7 @@ class AuthController extends GetxController {
             body: jsonEncode(body),
           )
           .timeout(
-            const Duration(seconds: 30),
-            onTimeout: () => throw Exception(),
+            const Duration(seconds: 60),
           );
       debugPrint("Response ${response.body}");
       if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -479,14 +484,16 @@ class AuthController extends GetxController {
           dismissOnTap: true,
         );
       }
-    } on TimeoutException catch (_) {
-      // Handle timeout explicitly
-      EasyLoading.showError(
-        "Request timed out. Please check your internet connection and try again.",
-        duration: const Duration(seconds: 1),
-      );
+    } on SocketException {
+      EasyLoading.showError("No internet connection.");
+    } on HttpException {
+      EasyLoading.showError("Failed to fetch data, try again");
+    } on FormatException {
+      EasyLoading.showError("Response format error.");
+    } on TimeoutException {
+      EasyLoading.showError("Request timed out. Try again.");
     } catch (e) {
-      debugPrint("Error: $e");
+      EasyLoading.showError("Something went wrong");
     } finally {
       EasyLoading.dismiss();
     }
@@ -514,8 +521,7 @@ class AuthController extends GetxController {
             body: jsonEncode(body),
           )
           .timeout(
-            const Duration(seconds: 30),
-            onTimeout: () => throw Exception(),
+            const Duration(seconds: 60),
           );
       debugPrint("Response ${response.body}");
       if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -530,14 +536,16 @@ class AuthController extends GetxController {
           dismissOnTap: true,
         );
       }
-    } on TimeoutException catch (_) {
-      // Handle timeout explicitly
-      EasyLoading.showError(
-        "Request timed out. Please check your internet connection and try again.",
-        duration: const Duration(seconds: 1),
-      );
+    } on SocketException {
+      EasyLoading.showError("No internet connection.");
+    } on HttpException {
+      EasyLoading.showError("Failed to fetch data, try again");
+    } on FormatException {
+      EasyLoading.showError("Response format error.");
+    } on TimeoutException {
+      EasyLoading.showError("Request timed out. Try again.");
     } catch (e) {
-      debugPrint("Error: $e");
+      EasyLoading.showError("Something went wrong");
     } finally {
       EasyLoading.dismiss();
     }
@@ -570,8 +578,7 @@ class AuthController extends GetxController {
             body: jsonEncode(body),
           )
           .timeout(
-            const Duration(seconds: 30),
-            onTimeout: () => throw Exception(),
+            const Duration(seconds: 60),
           );
       debugPrint("Response ${response.body}");
       if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -587,14 +594,16 @@ class AuthController extends GetxController {
           dismissOnTap: true,
         );
       }
-    } on TimeoutException catch (_) {
-      // Handle timeout explicitly
-      EasyLoading.showError(
-        "Request timed out. Please check your internet connection and try again.",
-        duration: const Duration(seconds: 1),
-      );
+    } on SocketException {
+      EasyLoading.showError("No internet connection.");
+    } on HttpException {
+      EasyLoading.showError("Failed to fetch data, try again");
+    } on FormatException {
+      EasyLoading.showError("Response format error.");
+    } on TimeoutException {
+      EasyLoading.showError("Request timed out. Try again.");
     } catch (e) {
-      debugPrint("Error: $e");
+      EasyLoading.showError("Something went wrong");
     } finally {
       EasyLoading.dismiss();
     }
@@ -628,8 +637,7 @@ class AuthController extends GetxController {
             body: jsonEncode(body),
           )
           .timeout(
-            const Duration(seconds: 30),
-            onTimeout: () => throw Exception(),
+            const Duration(seconds: 60),
           );
       debugPrint("Response ${response.body}");
       if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -646,14 +654,16 @@ class AuthController extends GetxController {
           dismissOnTap: true,
         );
       }
-    } on TimeoutException catch (_) {
-      // Handle timeout explicitly
-      EasyLoading.showError(
-        "Request timed out. Please check your internet connection and try again.",
-        duration: const Duration(seconds: 1),
-      );
+    } on SocketException {
+      EasyLoading.showError("No internet connection.");
+    } on HttpException {
+      EasyLoading.showError("Failed to fetch data, try again");
+    } on FormatException {
+      EasyLoading.showError("Response format error.");
+    } on TimeoutException {
+      EasyLoading.showError("Request timed out. Try again.");
     } catch (e) {
-      debugPrint("Error: $e");
+      EasyLoading.showError("Something went wrong");
     } finally {
       EasyLoading.dismiss();
     }
@@ -682,8 +692,7 @@ class AuthController extends GetxController {
             body: jsonEncode(body),
           )
           .timeout(
-            const Duration(seconds: 30),
-            onTimeout: () => throw Exception(),
+            const Duration(seconds: 60),
           );
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -699,14 +708,16 @@ class AuthController extends GetxController {
           dismissOnTap: true,
         );
       }
-    } on TimeoutException catch (_) {
-      // Handle timeout explicitly
-      EasyLoading.showError(
-        "Request timed out. Please check your internet connection and try again.",
-        duration: const Duration(seconds: 1),
-      );
+    } on SocketException {
+      EasyLoading.showError("No internet connection.");
+    } on HttpException {
+      EasyLoading.showError("Failed to fetch data, try again");
+    } on FormatException {
+      EasyLoading.showError("Response format error.");
+    } on TimeoutException {
+      EasyLoading.showError("Request timed out. Try again.");
     } catch (e) {
-      debugPrint("Error: $e");
+      EasyLoading.showError("Something went wrong");
     } finally {
       EasyLoading.dismiss();
     }
@@ -740,8 +751,7 @@ class AuthController extends GetxController {
             body: jsonEncode(body),
           )
           .timeout(
-            const Duration(seconds: 30),
-            onTimeout: () => throw Exception(),
+            const Duration(seconds: 60),
           );
       debugPrint("Response: ${response.body}");
       if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -755,14 +765,16 @@ class AuthController extends GetxController {
           dismissOnTap: true,
         );
       }
-    } on TimeoutException catch (_) {
-      // Handle timeout explicitly
-      EasyLoading.showError(
-        "Request timed out. Please check your internet connection and try again.",
-        duration: const Duration(seconds: 1),
-      );
+    } on SocketException {
+      EasyLoading.showError("No internet connection.");
+    } on HttpException {
+      EasyLoading.showError("Failed to fetch data, try again");
+    } on FormatException {
+      EasyLoading.showError("Response format error.");
+    } on TimeoutException {
+      EasyLoading.showError("Request timed out. Try again.");
     } catch (e) {
-      debugPrint("Error: $e");
+      EasyLoading.showError("Something went wrong");
     } finally {
       EasyLoading.dismiss();
     }

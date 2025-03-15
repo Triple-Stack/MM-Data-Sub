@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import '/controllers/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
@@ -32,8 +33,7 @@ class AirtimeController extends GetxController {
             headers: header,
           )
           .timeout(
-            const Duration(seconds: 30),
-            onTimeout: () => throw Exception(),
+            const Duration(seconds: 60),
           );
       debugPrint("Networks: ${response.body}");
       if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -43,14 +43,16 @@ class AirtimeController extends GetxController {
         final message = jsonDecode(response.body)["msg"];
         debugPrint("Networks: $message");
       }
-    } on TimeoutException catch (_) {
-      // Handle timeout explicitly
-      EasyLoading.showError(
-        "Request timed out. Please check your internet connection and try again.",
-        duration: const Duration(seconds: 1),
-      );
+    } on SocketException {
+      EasyLoading.showError("No internet connection.");
+    } on HttpException {
+      EasyLoading.showError("Failed to fetch data, try again");
+    } on FormatException {
+      EasyLoading.showError("Response format error.");
+    } on TimeoutException {
+      EasyLoading.showError("Request timed out. Try again.");
     } catch (e) {
-      debugPrint("Error: $e");
+      EasyLoading.showError("Something went wrong");
     }
   }
 
@@ -88,8 +90,7 @@ class AirtimeController extends GetxController {
             body: jsonEncode(body),
           )
           .timeout(
-            const Duration(seconds: 30),
-            onTimeout: () => throw Exception(),
+            const Duration(seconds: 60),
           );
       debugPrint("Airtime: ${response.body}");
       final auth = Get.put(AuthController());
@@ -114,15 +115,16 @@ class AirtimeController extends GetxController {
           duration: const Duration(seconds: 3),
         );
       }
-    } on TimeoutException catch (_) {
-      // Handle timeout explicitly
-      EasyLoading.showError(
-        "Request timed out. Please check your internet connection and try again.",
-        duration: const Duration(seconds: 1),
-      );
+    } on SocketException {
+      EasyLoading.showError("No internet connection.");
+    } on HttpException {
+      EasyLoading.showError("Failed to fetch data, try again");
+    } on FormatException {
+      EasyLoading.showError("Response format error.");
+    } on TimeoutException {
+      EasyLoading.showError("Request timed out. Try again.");
     } catch (e) {
-      debugPrint("Error: $e");
-      EasyLoading.showError("$e");
+      EasyLoading.showError("Something went wrong");
     } finally {
       EasyLoading.dismiss();
     }

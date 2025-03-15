@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import '/model/cable_tv/cables_model.dart';
 import '/model/home/cable/cable_model.dart';
 import '/model/home/cable/cable_success.dart';
@@ -31,8 +32,7 @@ class CableTvController extends GetxController {
             headers: header,
           )
           .timeout(
-            const Duration(seconds: 30),
-            onTimeout: () => throw Exception(),
+            const Duration(seconds: 60),
           );
       debugPrint("Body: ${response.body}");
       if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -44,14 +44,16 @@ class CableTvController extends GetxController {
         final message = jsonDecode(response.body)["msg"];
         AppConstants.throwError(message);
       }
-    } on TimeoutException catch (_) {
-      // Handle timeout explicitly
-      EasyLoading.showError(
-        "Request timed out. Please check your internet connection and try again.",
-        duration: const Duration(seconds: 1),
-      );
+    } on SocketException {
+      EasyLoading.showError("No internet connection.");
+    } on HttpException {
+      EasyLoading.showError("Failed to fetch data, try again");
+    } on FormatException {
+      EasyLoading.showError("Response format error.");
+    } on TimeoutException {
+      EasyLoading.showError("Request timed out. Try again.");
     } catch (e) {
-      debugPrint("Error: $e");
+      EasyLoading.showError("Something went wrong");
     }
   }
 
@@ -85,8 +87,7 @@ class CableTvController extends GetxController {
             body: jsonEncode(body),
           )
           .timeout(
-            const Duration(seconds: 30),
-            onTimeout: () => throw Exception(),
+            const Duration(seconds: 60),
           );
       debugPrint("Cable: ${response.body}");
       if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -113,14 +114,16 @@ class CableTvController extends GetxController {
           duration: const Duration(seconds: 3),
         );
       }
-    } on TimeoutException catch (_) {
-      // Handle timeout explicitly
-      EasyLoading.showError(
-        "Request timed out. Please check your internet connection and try again.",
-        duration: const Duration(seconds: 1),
-      );
+    } on SocketException {
+      EasyLoading.showError("No internet connection.");
+    } on HttpException {
+      EasyLoading.showError("Failed to fetch data, try again");
+    } on FormatException {
+      EasyLoading.showError("Response format error.");
+    } on TimeoutException {
+      EasyLoading.showError("Request timed out. Try again.");
     } catch (e) {
-      debugPrint("Error: $e");
+      EasyLoading.showError("Something went wrong");
     } finally {
       EasyLoading.dismiss();
     }
@@ -155,8 +158,7 @@ class CableTvController extends GetxController {
             body: jsonEncode(body),
           )
           .timeout(
-            const Duration(seconds: 30),
-            onTimeout: () => throw Exception(),
+            const Duration(seconds: 60),
           );
       debugPrint("Data Success: ${response.body}");
       final auth = Get.put(AuthController());
@@ -181,14 +183,16 @@ class CableTvController extends GetxController {
           duration: const Duration(seconds: 3),
         );
       }
-    } on TimeoutException catch (_) {
-      // Handle timeout explicitly
-      EasyLoading.showError(
-        "Request timed out. Please check your internet connection and try again.",
-        duration: const Duration(seconds: 1),
-      );
+    } on SocketException {
+      EasyLoading.showError("No internet connection.");
+    } on HttpException {
+      EasyLoading.showError("Failed to fetch data, try again");
+    } on FormatException {
+      EasyLoading.showError("Response format error.");
+    } on TimeoutException {
+      EasyLoading.showError("Request timed out. Try again.");
     } catch (e) {
-      debugPrint("Error: $e");
+      EasyLoading.showError("Something went wrong");
     } finally {
       EasyLoading.dismiss();
     }
